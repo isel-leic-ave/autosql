@@ -61,8 +61,10 @@ namespace SqlReflectTest
             // Delete the created category from database
             //
             categories.Delete(actual);
-            actual = (Category)categories.GetById(id);
-            Assert.IsNull(actual);
+            object res = categories.GetById(id);
+            actual = res != null ? (Category)res : default(Category);
+            Assert.IsNull(actual.CategoryName);
+            Assert.IsNull(actual.Description);
         }
 
         public void TestCategoryUpdate()

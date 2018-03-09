@@ -3,7 +3,7 @@
 namespace SqlReflectTest.Model
 {
     [Table("Categories")]
-    public class Category
+    public struct Category
     {
         [PK]
         public int CategoryID { get; set; }
