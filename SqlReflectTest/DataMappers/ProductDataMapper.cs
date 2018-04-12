@@ -1,7 +1,7 @@
 ﻿using SqlReflect;
 using SqlReflectTest.Model;
 using System;
-using System.Data.SqlClient;
+using System.Data;
 
 namespace SqlReflectTest.DataMappers
 {
@@ -54,7 +54,7 @@ namespace SqlReflectTest.DataMappers
             return SQL_DELETE + p.ProductID;
         }
         
-        protected override object Load(SqlDataReader dr)
+        protected override object Load(IDataReader dr)
         {
             Product p = new Product();
             p.ProductID = (int) dr["ProductID"];

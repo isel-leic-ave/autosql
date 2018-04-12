@@ -1,7 +1,7 @@
 ﻿using SqlReflect;
 using SqlReflectTest.Model;
 using System;
-using System.Data.SqlClient;
+using System.Data;
 
 namespace SqlReflectTest.DataMappers
 {
@@ -27,7 +27,7 @@ namespace SqlReflectTest.DataMappers
             return SQL_GET_BY_ID + id; 
         }
 
-        protected override object Load(SqlDataReader dr)
+        protected override object Load(IDataReader dr)
         {
             Category c = new Category();
             c.CategoryID = (int)dr["CategoryID"];

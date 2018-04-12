@@ -1,9 +1,5 @@
-﻿using SqlReflect.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Reflection;
+﻿using System;
+using System.Data;
 
 namespace SqlReflect
 {
@@ -13,7 +9,11 @@ namespace SqlReflect
         {
         }
 
-        protected override object Load(SqlDataReader dr)
+        public ReflectDataMapper(Type klass, string connStr, bool withCache) : base(connStr, withCache)
+        {
+        }
+
+        protected override object Load(IDataReader dr)
         {
             throw new NotImplementedException();
         }
