@@ -1,7 +1,7 @@
 ﻿using SqlReflect;
 using SqlReflectTest.Model;
 using System;
-using System.Data.SqlClient;
+using System.Data;
 
 namespace SqlReflectTest.DataMappers
 {
@@ -40,7 +40,7 @@ namespace SqlReflectTest.DataMappers
 
         
 
-        protected override object Load(SqlDataReader dr)
+        protected override object Load(IDataReader dr)
         {
             Supplier s = new Supplier();
             s.SupplierID = (int)dr["SupplierID"];
@@ -49,11 +49,11 @@ namespace SqlReflectTest.DataMappers
             s.ContactTitle = (string)dr["ContactTitle"];
             s.Address = (string)dr["Address"];
             s.City = (string)dr["City"];
-            s.Region = dr["Region"] is DBNull ? null : (string)dr["Region"];
+            s.Region = dr["Region"] as string;
             s.PostalCode = (string)dr["PostalCode"];
             s.Country = (string)dr["Country"];
             s.Phone = (string)dr["Phone"];
-            s.Fax = dr["Fax"] is DBNull ? null : (string)dr["Fax"];
+            s.Fax = dr["Fax"] as string;
             return s;
         }
     }

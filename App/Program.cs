@@ -1,36 +1,51 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
+﻿using SqlReflect;
+using SqlReflectTest.DataMappers;
+using SqlReflectTest.Model;
+using System;
+using System.Collections;
+using System.Diagnostics;
 
 namespace App
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            string connStr = @"
+        static readonly string connStr = @"
                     Server=(LocalDB)\MSSQLLocalDB;
                     Integrated Security=true;
                     AttachDbFileName=" +
                         Environment.CurrentDirectory +
                         "\\data\\NORTHWND.MDF";
 
-            SqlConnection con = new SqlConnection(connStr);
-            try
+        static void Main(string[] args)
+        {
+            CompareMappers(typeof(Employee));
+            CompareMappers(typeof(Customer));
+
+        }
+        private static void CompareMappers(Type klass)
+        {
+            Console.WriteLine("############## Reflect WITH Cache");
+            IDataMapper emps = new ReflectDataMapper(klass, connStr);
+            for (int i = 0; i < 5; i++)
             {
-                SqlCommand cmd = con.CreateCommand();
-                cmd.CommandText = "SELECT ProductID, ProductName FROM Products";
-                con.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                    Console.WriteLine(dr["ProductName"]);
-            }
-            finally
-            {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
+                GetAllItens(emps);
             }
 
+            Console.WriteLine("############## Reflect NO Cache");
+            emps = new ReflectDataMapper(klass, connStr, false);
+            for (int i = 0; i < 5; i++)
+            {
+                GetAllItens(emps);
+            }
+        }
+
+        private static void GetAllItens(IDataMapper data)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            IEnumerable res = data.GetAll();
+            stopwatch.Stop();
+            Console.WriteLine("Time elapsed (us): {0}", stopwatch.Elapsed.TotalMilliseconds * 1000);
         }
     }
 }

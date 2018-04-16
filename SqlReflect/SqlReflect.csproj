@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractDataMapper.cs" />
+    <Compile Include="DynamicDataMapper.cs" />
+    <Compile Include="EmitDataMapper.cs" />
     <Compile Include="IDataMapper.cs" />
     <Compile Include="ReflectDataMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
