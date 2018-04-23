@@ -100,7 +100,11 @@ namespace SqlReflect
             while (dr.Read())
             {
                 if (clause != null)
-                    if (!dr[clause[0]].ToString().Equals(clause[1])) continue;
+                {
+                    string col = clause[0].Trim();
+                    string val = clause[1].Trim();
+                    if (!dr[col].ToString().Equals(val)) continue;
+                }
                 res.Add(Load(dr));
             }
             return res;
