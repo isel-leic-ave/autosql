@@ -34,6 +34,12 @@ namespace SqlReflect
         public object GetById(object id)
         {
             string sql = SqlGetById(id);
+            if (cache != null)
+            {
+                string tableName = GetTableNameFromSql(sql, "FROM ");
+                DataTable table = cache.Tables[tableName];
+                if (table == null) GetAll();
+            }
             IEnumerator iter = Get(sql).GetEnumerator();
             return iter.MoveNext() ? iter.Current : null;
         }
@@ -51,7 +57,7 @@ namespace SqlReflect
 
             DataTable table = cache.Tables[tableName];
             return table != null
-                ? DataReaderToList(table.CreateDataReader())
+                ? DataReaderToList(sql, table.CreateDataReader())
                 : GetFromDb(sql, tableName);
         }
 
@@ -83,7 +89,22 @@ namespace SqlReflect
             while (dr.Read()) res.Add(Load(dr));
             return res;
         }
-
+        private IList DataReaderToList(string sql, IDataReader dr)
+        {
+            string[] clause = sql
+                .ToUpper()
+                .Split(new[] { " WHERE " }, StringSplitOptions.None)
+                [1]  // Last part
+                .Split('=');
+            IList res = new List<object>();
+            while (dr.Read())
+            {
+                if (clause != null)
+                    if (!dr[clause[0]].ToString().Equals(clause[1])) continue;
+                res.Add(Load(dr));
+            }
+            return res;
+        }
         public object Insert(object target)
         {
             string sql = SqlInsert(target);
